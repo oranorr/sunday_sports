@@ -22,6 +22,9 @@ class TestimonialsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = colorScheme.brightness == Brightness.dark;
+
     final testimonials = [
       Testimonial(
         name: 'Анна Петрова',
@@ -49,12 +52,12 @@ class TestimonialsSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 80),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: colorScheme.surface,
         image: DecorationImage(
           image: NetworkImage(
               'https://www.transparenttextures.com/patterns/cubes.png'),
           repeat: ImageRepeat.repeat,
-          opacity: 0.05,
+          opacity: isDark ? 0.03 : 0.1,
         ),
       ),
       child: Column(
@@ -65,10 +68,10 @@ class TestimonialsSection extends StatelessWidget {
               children: [
                 Text(
                   'Отзывы участников',
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.raleway(
                     fontSize: 42,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    fontWeight: FontWeight.w300,
+                    color: colorScheme.onSurface,
                   ),
                 ).animate().fadeIn(duration: 800.ms),
                 const SizedBox(height: 20),
@@ -76,9 +79,10 @@ class TestimonialsSection extends StatelessWidget {
                   constraints: const BoxConstraints(maxWidth: 600),
                   child: Text(
                     'Узнайте, что говорят участники о нашей спортивной мафии',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.raleway(
                       fontSize: 18,
-                      color: Colors.white.withOpacity(0.9),
+                      fontWeight: FontWeight.w300,
+                      color: colorScheme.onSurface.withOpacity(0.9),
                       height: 1.6,
                     ),
                     textAlign: TextAlign.center,
@@ -112,6 +116,9 @@ class TestimonialsSection extends StatelessWidget {
   }
 
   Widget _buildTestimonialCard(BuildContext context, Testimonial testimonial) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = colorScheme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       padding: const EdgeInsets.all(30),
@@ -120,14 +127,14 @@ class TestimonialsSection extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Theme.of(context).colorScheme.surface,
-            Theme.of(context).colorScheme.surface.withOpacity(0.8),
+            colorScheme.surface.withOpacity(isDark ? 0.8 : 1),
+            colorScheme.surface.withOpacity(isDark ? 0.6 : 0.9),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: colorScheme.primary.withOpacity(isDark ? 0.1 : 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -141,7 +148,7 @@ class TestimonialsSection extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: Theme.of(context).colorScheme.secondary,
+                color: colorScheme.secondary,
                 width: 2,
               ),
             ),
@@ -153,26 +160,28 @@ class TestimonialsSection extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             testimonial.name,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.raleway(
               fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 5),
           Text(
             testimonial.position,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.raleway(
               fontSize: 16,
-              color: Theme.of(context).colorScheme.secondary,
+              fontWeight: FontWeight.w300,
+              color: colorScheme.secondary,
             ),
           ),
           const SizedBox(height: 20),
           Text(
             testimonial.text,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.raleway(
               fontSize: 16,
-              color: Colors.white.withOpacity(0.9),
+              fontWeight: FontWeight.w300,
+              color: colorScheme.onSurface.withOpacity(0.9),
               height: 1.6,
             ),
             textAlign: TextAlign.center,
