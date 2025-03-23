@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../widgets/hero_section.dart';
 import '../widgets/about_section.dart';
-import '../widgets/testimonials_section.dart';
+import '../widgets/reviews_section.dart';
 import '../widgets/pricing_section.dart';
 import '../widgets/contact_section.dart';
 
@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             const HeroSection(),
             const AboutSection(),
-            const TestimonialsSection(),
+            const ReviewsSection(),
             const PricingSection(),
             const ContactSection(),
           ],

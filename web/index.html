@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -27,12 +28,28 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>sunday_sports</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- CORS Proxy Configuration -->
+  <script>
+    window.addEventListener('load', function () {
+      if (window.location.protocol === 'https:') {
+        window._flutter_cors_fix = function (url) {
+          if (url.startsWith('https://drive.google.com/')) {
+            return url + (url.includes('?') ? '&' : '?') + 'origin=' + window.location.origin;
+          }
+          return 'https://cors-anywhere.herokuapp.com/' + url;
+        };
+      }
+    });
+  </script>
 </head>
+
 <body>
   <script src="flutter_bootstrap.js" async></script>
 </body>
+
 </html>
