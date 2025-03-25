@@ -25,6 +25,7 @@ GoogleService-Info.plist
 # Google Cloud
 *.json
 !pubspec.json
+assets/sundaysports-*.json
 
 # Generated files
 *.g.dart
