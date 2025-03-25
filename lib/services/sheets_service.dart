@@ -20,10 +20,37 @@ class SheetsService {
   // Инициализация учетных данных
   static Future<void> _initializeCredentials() async {
     if (_credentials == null) {
-      final jsonString =
-          await rootBundle.loadString('assets/sundaysports-d30634cd7cfa.json');
-      final jsonMap = json.decode(jsonString);
-      _credentials = ServiceAccountCredentials.fromJson(jsonMap);
+      try {
+        // Пытаемся загрузить из файла (для разработки)
+        final jsonString = await rootBundle
+            .loadString('assets/sundaysports-d30634cd7cfa.json');
+        final jsonMap = json.decode(jsonString);
+        _credentials = ServiceAccountCredentials.fromJson(jsonMap);
+        log('Учетные данные инициализированы из файла');
+      } catch (e) {
+        // В продакшене используем строку, закодированную Base64
+        try {
+          const String encodedCredentials = String.fromEnvironment(
+              'GOOGLE_SHEETS_CREDENTIALS',
+              defaultValue: '');
+
+          if (encodedCredentials.isNotEmpty) {
+            // Декодируем Base64 в JSON строку
+            final jsonString = utf8.decode(base64.decode(encodedCredentials));
+            final jsonMap = json.decode(jsonString);
+            _credentials = ServiceAccountCredentials.fromJson(jsonMap);
+            log('Учетные данные инициализированы из переменной окружения');
+          } else {
+            log('ОШИБКА: Переменная окружения GOOGLE_SHEETS_CREDENTIALS не установлена');
+            throw Exception(
+                'Не удалось инициализировать учетные данные: переменная окружения не задана');
+          }
+        } catch (envError) {
+          log('ОШИБКА при инициализации учетных данных: $envError');
+          throw Exception(
+              'Не удалось инициализировать учетные данные: $envError');
+        }
+      }
     }
   }
 

@@ -15,6 +15,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
   final SheetsService _sheetsService = SheetsService();
   List<Review> _reviews = [];
   bool _isLoading = true;
+  String _errorMessage = '';
 
   @override
   void initState() {
@@ -24,7 +25,9 @@ class _ReviewsSectionState extends State<ReviewsSection> {
 
   Future<void> _loadReviews() async {
     try {
+      log('PROD DEBUG: Начинаем загрузку отзывов');
       final reviews = await _sheetsService.getReviews();
+      log('PROD DEBUG: Получены отзывы: ${reviews.length}');
       if (mounted) {
         setState(() {
           _reviews = reviews;
@@ -33,9 +36,11 @@ class _ReviewsSectionState extends State<ReviewsSection> {
         });
       }
     } catch (e) {
+      log('PROD DEBUG: Ошибка загрузки отзывов: $e');
       if (mounted) {
         setState(() {
           _isLoading = false;
+          _errorMessage = 'Ошибка загрузки отзывов: $e';
         });
       }
       log('Error loading reviews: $e');
@@ -46,6 +51,53 @@ class _ReviewsSectionState extends State<ReviewsSection> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
+    }
+
+    // Добавляем отладочную информацию, если отзывы пустые
+    if (_reviews.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.red.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Colors.red),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'ОТЛАДОЧНАЯ ИНФОРМАЦИЯ (PROD)',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 15),
+            Text(
+              _errorMessage.isEmpty
+                  ? 'Список отзывов пуст. Отзывы не были загружены, но ошибки не возникло.\nВозможно, проблема в доступе к Google Sheets или в отсутствии учетных данных.'
+                  : _errorMessage,
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _isLoading = true;
+                  _errorMessage = '';
+                });
+                _loadReviews();
+              },
+              child: const Text('Повторить загрузку'),
+            ),
+          ],
+        ),
+      );
     }
 
     return Container(
