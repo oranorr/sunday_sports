@@ -33,9 +33,29 @@ class HomeScreen extends StatelessWidget {
             const BusinessBenefitsSection(),
             const AboutSection(),
             const ReviewsSection(),
-            const PricingSection(),
-            const ContactSection(),
+            // const PricingSection(),
+            // const ContactSection(),
+            const PlaceholderWidget(),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class PlaceholderWidget extends StatelessWidget {
+  const PlaceholderWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 1000,
+      color: Theme.of(context).colorScheme.surface,
+      child: const Center(
+        child: Text(
+          'Остальное пока в разработке',
+          style: TextStyle(
+              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.red),
         ),
       ),
     );
