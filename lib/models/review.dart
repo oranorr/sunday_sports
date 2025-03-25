@@ -1,6 +1,6 @@
-import 'dart:developer';
-import '../services/asset_image_service.dart';
 import 'package:flutter/material.dart';
+
+import '../services/asset_image_service.dart';
 
 class Review {
   final String name;
@@ -11,6 +11,7 @@ class Review {
   final String? photoUrl;
   final bool hasSocialProgress;
   final bool wouldRecommend;
+  final int vibeRating;
 
   Review({
     required this.name,
@@ -21,6 +22,7 @@ class Review {
     this.photoUrl,
     this.hasSocialProgress = false,
     this.wouldRecommend = false,
+    required this.vibeRating,
   });
 
   Future<Widget> buildPhoto({
@@ -44,10 +46,11 @@ class Review {
     // Преобразование строки навыков в список
     List<String> parseSkills(String? skillsStr) {
       if (skillsStr == null || skillsStr.isEmpty) return [];
+      if (skillsStr.contains('Лаконичность речи')) {
+        skillsStr = 'Лаконичность речи';
+      }
       return skillsStr.split(', ').where((skill) => skill.isNotEmpty).toList();
     }
-
-    // log(row.toString());
 
     return Review(
       name: row['Как вас зовут? ']?.toString().trim() ?? '',
@@ -75,6 +78,11 @@ class Review {
       wouldRecommend:
           row['Порекомендовали ли бы вы эти игры своим друзьям?']?.toString() ==
               'Да, конечно (уже)',
+      vibeRating: int.tryParse(
+              row['Как вы оценили бы эмоциональную атмосферу, царившую за нашими столами?']
+                      ?.toString() ??
+                  '0') ??
+          0,
     );
   }
 }

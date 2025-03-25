@@ -8,7 +8,6 @@ class AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = colorScheme.brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 20),

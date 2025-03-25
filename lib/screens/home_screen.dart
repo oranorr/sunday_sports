@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import '../widgets/business_benefits_section.dart';
 import '../widgets/hero_section.dart';
 import '../widgets/about_section.dart';
 import '../widgets/reviews_section.dart';
@@ -31,6 +30,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             const HeroSection(),
+            const BusinessBenefitsSection(),
             const AboutSection(),
             const ReviewsSection(),
             const PricingSection(),
