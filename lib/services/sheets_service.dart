@@ -1,108 +1,61 @@
 import 'dart:developer';
-import 'package:googleapis/sheets/v4.dart';
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:http/http.dart' as http;
-import '../models/review.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'dart:convert';
+import '../models/review.dart';
 
 class SheetsService {
-  // Константы для подключения к Google Sheets
-  static const _spreadsheetId = '1Q11IbuXyKnW6Hp65h17Dw2Yh4OpmSJNwGcdf1ZwyulM';
-  static const _sheetName = 'Ответы на форму (1)';
+  // Путь к Excel файлу в ассетах
+  static const _excelPath = 'assets/Отзывы на мафию.xlsx';
 
-  // Область видимости для API
-  static const _scopes = [SheetsApi.spreadsheetsReadonlyScope];
-
-  // Ключи сервисного аккаунта
-  static ServiceAccountCredentials? _credentials;
-
-  // Инициализация учетных данных
-  static Future<void> _initializeCredentials() async {
-    if (_credentials == null) {
-      try {
-        // Пытаемся загрузить из файла (для разработки)
-        final jsonString = await rootBundle
-            .loadString('assets/sundaysports-d30634cd7cfa.json');
-        final jsonMap = json.decode(jsonString);
-        _credentials = ServiceAccountCredentials.fromJson(jsonMap);
-        log('Учетные данные инициализированы из файла');
-      } catch (e) {
-        // В продакшене используем строку, закодированную Base64
-        try {
-          const String encodedCredentials = String.fromEnvironment(
-              'GOOGLE_SHEETS_CREDENTIALS',
-              defaultValue: '');
-
-          if (encodedCredentials.isNotEmpty) {
-            // Декодируем Base64 в JSON строку
-            final jsonString = utf8.decode(base64.decode(encodedCredentials));
-            final jsonMap = json.decode(jsonString);
-            _credentials = ServiceAccountCredentials.fromJson(jsonMap);
-            log('Учетные данные инициализированы из переменной окружения');
-          } else {
-            log('ОШИБКА: Переменная окружения GOOGLE_SHEETS_CREDENTIALS не установлена');
-            throw Exception(
-                'Не удалось инициализировать учетные данные: переменная окружения не задана');
-          }
-        } catch (envError) {
-          log('ОШИБКА при инициализации учетных данных: $envError');
-          throw Exception(
-              'Не удалось инициализировать учетные данные: $envError');
-        }
-      }
-    }
-  }
-
-  // Метод для получения отзывов из Google Sheets
+  // Метод для получения отзывов из Excel файла
   Future<List<Review>> getReviews() async {
     try {
-      await _initializeCredentials();
+      log('1. Начало метода getReviews()');
 
-      // Авторизация и создание клиента
-      final client = await clientViaServiceAccount(_credentials!, _scopes);
+      // Загрузка Excel файла из ассетов
+      final bytes = await rootBundle.load(_excelPath);
+      final excel = Excel.decodeBytes(bytes.buffer.asUint8List());
 
-      // Создание API-клиента для Sheets
-      final sheetsApi = SheetsApi(client);
+      // Получаем первый лист
+      final sheet = excel.tables.keys.first;
+      final table = excel.tables[sheet]!;
 
-      // Получение данных из таблицы
-      final response = await sheetsApi.spreadsheets.values.get(
-        _spreadsheetId,
-        '$_sheetName!A1:Q1000', // Диапазон ячеек для чтения
-      );
+      log('2. Excel файл успешно загружен');
 
-      // Завершение работы клиента
-      client.close();
-
-      // Обработка полученных данных
-      final values = response.values;
-      if (values == null || values.isEmpty) {
-        log('Нет данных в таблице');
-        return [];
-      }
-
-      // Первая строка содержит заголовки
-      final headers = values.first.map((e) => e.toString()).toList();
+      // Получаем заголовки из первой строки
+      final headers =
+          table.row(0).map((cell) => cell?.value.toString() ?? '').toList();
+      log('3. Получены заголовки: ${headers.join(", ")}');
 
       // Преобразование строк в отзывы
       final reviews = <Review>[];
-      for (var i = 1; i < values.length; i++) {
-        final row = values[i];
+
+      // Начинаем со второй строки (индекс 1), так как первая строка - заголовки
+      for (var rowIndex = 1; rowIndex < table.maxRows; rowIndex++) {
+        final row = table.row(rowIndex);
+
         // Пропускаем пустые строки
-        if (row.every((cell) => cell.toString().trim().isEmpty)) continue;
+        if (row.every((cell) =>
+            cell?.value == null || cell!.value.toString().trim().isEmpty)) {
+          continue;
+        }
 
         // Создание Map с данными строки
         final Map<String, dynamic> rowData = {};
-        for (var j = 0; j < row.length && j < headers.length; j++) {
-          rowData[headers[j]] = row[j];
+        for (var colIndex = 0;
+            colIndex < row.length && colIndex < headers.length;
+            colIndex++) {
+          rowData[headers[colIndex]] = row[colIndex]?.value;
         }
+
         // Создание объекта Review из данных строки
         reviews.add(Review.fromSheetRow(rowData));
       }
 
+      log('4. Всего обработано отзывов: ${reviews.length}');
       return reviews;
     } catch (e) {
-      log('Ошибка при получении отзывов: $e');
+      log('ОШИБКА при получении отзывов: $e');
       return [];
     }
   }

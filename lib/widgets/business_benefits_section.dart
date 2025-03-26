@@ -10,8 +10,11 @@ class BusinessBenefitsSection extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return SizedBox(
+    return Container(
       width: double.infinity,
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height,
+      ),
       child: Column(
         children: [
           // Заголовок и верхняя часть с градиентным фоном
@@ -112,7 +115,7 @@ class BusinessBenefitsSection extends StatelessWidget {
           Container(
             height: 80,
             width: double.infinity,
-            color: colorScheme.surface,
+            color: Colors.grey[900],
             child: Center(
               child: Container(
                 padding: const EdgeInsets.all(16),
@@ -139,7 +142,7 @@ class BusinessBenefitsSection extends StatelessWidget {
           // Основная секция с преимуществами
           Container(
             padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 24),
-            color: colorScheme.surface,
+            color: Colors.grey[900],
             child: Column(
               children: [
                 // Первый ряд из двух карточек
@@ -273,7 +276,8 @@ class BusinessBenefitsSection extends StatelessWidget {
             ),
           ),
 
-          // Итоговая секция "Почему это работает"
+          // Итоговая секция "Почему это работает" - закомментирована
+          /*
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 70, horizontal: 24),
@@ -375,6 +379,7 @@ class BusinessBenefitsSection extends StatelessWidget {
               ],
             ),
           ),
+          */
         ],
       ),
     );
@@ -415,11 +420,11 @@ class BusinessBenefitsSection extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        color: Colors.grey[800],
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withOpacity(0.2),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -433,10 +438,10 @@ class BusinessBenefitsSection extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
+                  color: Colors.red.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: Colors.black, size: 28),
+                child: Icon(icon, color: Colors.white, size: 28),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -445,7 +450,7 @@ class BusinessBenefitsSection extends StatelessWidget {
                   style: GoogleFonts.montserrat(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -454,14 +459,14 @@ class BusinessBenefitsSection extends StatelessWidget {
           const SizedBox(height: 16),
           Container(
             height: 1,
-            color: colorScheme.outlineVariant,
+            color: Colors.grey[700],
           ),
           const SizedBox(height: 16),
           Text(
             description,
             style: GoogleFonts.montserrat(
               fontSize: 16,
-              color: colorScheme.onSurfaceVariant,
+              color: Colors.white.withOpacity(0.9),
               height: 1.5,
             ),
           ),
@@ -499,10 +504,10 @@ class BusinessBenefitsSection extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.1),
+              color: Colors.red.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: colorScheme.primary.withOpacity(0.3),
+                color: Colors.red.withOpacity(0.3),
                 width: 2,
               ),
             ),
@@ -514,10 +519,10 @@ class BusinessBenefitsSection extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: colorScheme.primaryContainer,
+                        color: Colors.red.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(icon, color: Colors.black, size: 28),
+                      child: Icon(icon, color: Colors.white, size: 28),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
@@ -529,14 +534,14 @@ class BusinessBenefitsSection extends StatelessWidget {
                             style: GoogleFonts.montserrat(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: colorScheme.primary,
+                              color: Colors.white,
                             ),
                           ),
                           Text(
                             mainDescription,
                             style: GoogleFonts.montserrat(
                               fontSize: 14,
-                              color: colorScheme.onSurfaceVariant,
+                              color: Colors.white.withOpacity(0.8),
                             ),
                           ),
                         ],
@@ -546,7 +551,7 @@ class BusinessBenefitsSection extends StatelessWidget {
                       isExpanded
                           ? Icons.keyboard_arrow_up
                           : Icons.keyboard_arrow_down,
-                      color: colorScheme.primary,
+                      color: Colors.white,
                       size: 28,
                     ),
                   ],
@@ -555,7 +560,7 @@ class BusinessBenefitsSection extends StatelessWidget {
                   const SizedBox(height: 20),
                   Container(
                     height: 1,
-                    color: colorScheme.outlineVariant,
+                    color: Colors.grey[700],
                   ),
                   const SizedBox(height: 20),
                   ...details.map((detail) => Padding(
@@ -564,14 +569,14 @@ class BusinessBenefitsSection extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Icon(Icons.arrow_right,
-                                color: colorScheme.primary, size: 24),
+                                color: Colors.white, size: 24),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 detail,
                                 style: GoogleFonts.montserrat(
                                   fontSize: 15,
-                                  color: colorScheme.onSurfaceVariant,
+                                  color: Colors.white.withOpacity(0.9),
                                 ),
                               ),
                             ),

@@ -101,242 +101,51 @@ class _ReviewsSectionState extends State<ReviewsSection> {
     }
 
     return Container(
-      decoration: const BoxDecoration(
-          // gradient: LinearGradient(
-          //   begin: Alignment.topLeft,
-          //   end: Alignment.bottomRight,
-          //   colors: [Colors.black, Colors.blueGrey],
-          // ),
-          ),
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.black,
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
       child: Column(
         children: [
           Text(
             'Отзывы',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+            style: TextStyle(
+              fontSize: 42,
+              fontWeight: FontWeight.w300,
+              color: Colors.white,
+            ),
           ).animate().fadeIn(duration: 1000.ms),
           const SizedBox(height: 40),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _reviews.length,
-            itemBuilder: (context, index) {
-              final review = _reviews[index];
-              return Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.white.withOpacity(0.2)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FutureBuilder<Widget>(
-                        future: review.buildPhoto(
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                          placeholder: Container(
-                            width: 100,
-                            height: 100,
-                            color: Colors.grey[300],
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                          errorWidget: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              size: 50,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.grey[300],
-                              child: const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
 
-                          if (snapshot.hasError) {
-                            log('Ошибка загрузки фото: ${snapshot.error}');
-                            return Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.error_outline,
-                                size: 50,
-                                color: Colors.grey,
-                              ),
-                            );
-                          }
+          // Отзывы в 1 или 2 столбца в зависимости от ширины экрана
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isWideScreen = constraints.maxWidth > 800;
 
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: snapshot.data ??
-                                Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Icon(
-                                    Icons.person,
-                                    size: 50,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                          );
-                        },
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              review.name,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            if (review.profession.isNotEmpty) ...[
-                              const SizedBox(height: 4),
-                              Text(
-                                review.profession,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ],
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                _buildInfoCard(
-                                  'Оценка',
-                                  '${review.rating}/10',
-                                  Icons.star,
-                                ),
-                                SizedBox(width: 10),
-                                _buildInfoCard(
-                                  'Изменились ли ваше мышление или социальные навыки?',
-                                  review.hasSocialProgress ? 'Да' : 'Нет',
-                                  review.hasSocialProgress
-                                      ? Icons.thumb_up
-                                      : Icons.thumb_down,
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              children: [
-                                _buildInfoCard(
-                                  'Эмоциональный вайб чек',
-                                  '${review.vibeRating}/10',
-                                  Icons.favorite,
-                                ),
-                                SizedBox(width: 10),
-                                _buildInfoCard(
-                                  'Порекомендую друзьям?',
-                                  review.wouldRecommend ? 'Да' : 'Нет',
-                                  review.wouldRecommend
-                                      ? Icons.thumb_up
-                                      : Icons.thumb_down,
-                                ),
-                              ],
-                            ),
-                            if (review.feedback.isNotEmpty) ...[
-                              const SizedBox(height: 16),
-                              Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.05),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.1),
-                                  ),
-                                ),
-                                child: Text(
-                                  review.feedback,
-                                  style: const TextStyle(
-                                    fontSize: 19,
-                                    color: Colors.white70,
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ),
-                            ],
-                            if (review.improvedSkills.isNotEmpty) ...[
-                              const SizedBox(height: 16),
-                              const Text(
-                                'Улучшенные навыки:',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: review.improvedSkills.map((skill) {
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 14,
-                                      vertical: 8,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: Colors.white.withOpacity(0.3),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      skill,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ).animate().fadeIn(duration: 1000.ms, delay: (index * 200).ms);
+              if (isWideScreen) {
+                // Разделяем отзывы на две колонки
+                final int halfLength = (_reviews.length / 2).ceil();
+
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: _buildReviewsList(_reviews.sublist(0, halfLength)),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: _buildReviewsList(_reviews.length > halfLength
+                          ? _reviews.sublist(halfLength)
+                          : []),
+                    ),
+                  ],
+                );
+              } else {
+                return _buildReviewsList(_reviews);
+              }
             },
           ),
         ],
@@ -344,39 +153,268 @@ class _ReviewsSectionState extends State<ReviewsSection> {
     );
   }
 
-  Widget _buildInfoCard(String title, String value, IconData icon) {
-    return Expanded(
-      child: Container(
-        width: 160,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
-        ),
-        child: Row(
+  Widget _buildReviewsList(List<Review> reviews) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: reviews.length,
+      itemBuilder: (context, index) {
+        final review = reviews[index];
+        return _buildReviewCard(review, index);
+      },
+    );
+  }
+
+  Widget _buildReviewCard(Review review, int index) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.white.withOpacity(0.2)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: Colors.amber, size: 24),
-            const SizedBox(width: 8),
-            Column(
+            // Заголовок с фото и именем
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 12, color: Colors.white70),
+                FutureBuilder<Widget>(
+                  future: review.buildPhoto(
+                    width: 80, // Уменьшаем размер фото
+                    height: 80,
+                    fit: BoxFit.cover,
+                    placeholder: Container(
+                      width: 80,
+                      height: 80,
+                      color: Colors.grey[300],
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                    errorWidget: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.person,
+                        size: 40,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        width: 80,
+                        height: 80,
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+
+                    if (snapshot.hasError) {
+                      log('Ошибка загрузки фото: ${snapshot.error}');
+                      return Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.error_outline,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
+                      );
+                    }
+
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: snapshot.data ??
+                          Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              size: 40,
+                              color: Colors.grey,
+                            ),
+                          ),
+                    );
+                  },
                 ),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        review.name,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      if (review.profession.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          review.profession,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ],
             ),
+
+            const SizedBox(height: 16),
+
+            // Оценки - адаптивный дизайн с Wrap
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _buildInfoCard(
+                  'Оценка',
+                  '${review.rating}/10',
+                  Icons.star,
+                ),
+                _buildInfoCard(
+                  'Изменились навыки?',
+                  review.hasSocialProgress ? 'Да' : 'Нет',
+                  review.hasSocialProgress ? Icons.thumb_up : Icons.thumb_down,
+                ),
+                _buildInfoCard(
+                  'Эмоциональный вайб',
+                  '${review.vibeRating}/10',
+                  Icons.favorite,
+                ),
+                _buildInfoCard(
+                  'Рекомендую',
+                  review.wouldRecommend ? 'Да' : 'Нет',
+                  review.wouldRecommend ? Icons.thumb_up : Icons.thumb_down,
+                ),
+              ],
+            ),
+
+            // Отзыв
+            if (review.feedback.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.1),
+                  ),
+                ),
+                child: Text(
+                  review.feedback,
+                  style: const TextStyle(
+                    fontSize: 16, // Уменьшаем размер текста
+                    color: Colors.white70,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+            ],
+
+            // Улучшенные навыки
+            if (review.improvedSkills.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              const Text(
+                'Улучшенные навыки:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: review.improvedSkills.map((skill) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Text(
+                      skill,
+                      style: const TextStyle(
+                        fontSize: 12, // Уменьшаем размер текста
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
           ],
         ),
+      ),
+    ).animate().fadeIn(duration: 1000.ms, delay: (index * 200).ms);
+  }
+
+  Widget _buildInfoCard(String title, String value, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withOpacity(0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.amber, size: 20),
+          const SizedBox(width: 6),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(fontSize: 10, color: Colors.white70),
+              ),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
