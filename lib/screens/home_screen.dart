@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sunday_sports/widgets/skills_section.dart';
 import '../widgets/business_benefits_section.dart';
 import '../widgets/hero_section.dart';
 import '../widgets/about_section.dart';
@@ -30,6 +31,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             const HeroSection(),
+            const SkillsSection(),
             const BusinessBenefitsSection(),
             const AboutSection(),
             const ReviewsSection(),
