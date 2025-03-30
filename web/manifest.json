@@ -1,11 +1,11 @@
 {
-    "name": "sunday_sports",
-    "short_name": "sunday_sports",
+    "name": "Sunday Sports — Мафия как бизнес-тренинг",
+    "short_name": "Sunday Sports",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#1E1E1E",
+    "theme_color": "#FF9800",
+    "description": "Мафия как бизнес-тренинг: развивайте навыки коммуникации, выявляйте скрытые сигналы и стройте доверие за 3 часа игры.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

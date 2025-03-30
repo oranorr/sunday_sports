@@ -56,14 +56,14 @@ class AboutSection extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.rocket_launch,
+                  Icons.location_on,
                   color: Colors.orange,
                   size: context.isSmallScreen ? 30 : 40,
                 ),
                 SizedBox(width: context.isSmallScreen ? 15 : 20),
                 Expanded(
                   child: Text(
-                    'Гибкие форматы: можем провести у вас в офисе, в коворкинге или онлайн.',
+                    'Только оффлайн формат: проводим в вашем офисе в Санкт-Петербурге.',
                     style: GoogleFonts.montserrat(
                       fontSize: context.isSmallScreen ? 16 : 18,
                       fontWeight: FontWeight.w500,

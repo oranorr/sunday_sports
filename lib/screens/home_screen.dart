@@ -4,6 +4,7 @@ import '../widgets/business_benefits_section.dart';
 import '../widgets/hero_section.dart';
 import '../widgets/about_section.dart';
 import '../widgets/reviews_section.dart';
+import '../widgets/faq_section.dart';
 import '../widgets/pricing_section.dart';
 import '../widgets/contact_section.dart';
 
@@ -35,6 +36,7 @@ class HomeScreen extends StatelessWidget {
             const BusinessBenefitsSection(),
             const AboutSection(),
             const ReviewsSection(),
+            const FAQSection(),
             const PricingSection(),
             const ContactSection(),
           ],
