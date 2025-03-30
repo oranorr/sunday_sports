@@ -3,6 +3,7 @@ import '../models/review.dart';
 import '../services/sheets_service.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:developer';
+import '../shared/extensions.dart';
 
 class ReviewsSection extends StatefulWidget {
   const ReviewsSection({super.key});
@@ -107,23 +108,29 @@ class _ReviewsSectionState extends State<ReviewsSection> {
       decoration: BoxDecoration(
         color: Colors.black,
       ),
-      padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
+      padding: EdgeInsets.symmetric(
+          vertical: context.isSmallScreen ? 40 : 60,
+          horizontal: context.isSmallScreen ? 15 : 20),
       child: Column(
         children: [
           Text(
             'Отзывы',
             style: TextStyle(
-              fontSize: 42,
+              fontSize: context.isSmallScreen
+                  ? 32
+                  : context.isMediumScreen
+                      ? 36
+                      : 42,
               fontWeight: FontWeight.w300,
               color: Colors.white,
             ),
           ).animate().fadeIn(duration: 1000.ms),
-          const SizedBox(height: 40),
+          SizedBox(height: context.isSmallScreen ? 25 : 40),
 
           // Отзывы в 1 или 2 столбца в зависимости от ширины экрана
           LayoutBuilder(
             builder: (context, constraints) {
-              final isWideScreen = constraints.maxWidth > 800;
+              final isWideScreen = constraints.maxWidth > 600;
 
               if (isWideScreen) {
                 // Разделяем отзывы на две колонки
@@ -135,7 +142,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                     Expanded(
                       child: _buildReviewsList(_reviews.sublist(0, halfLength)),
                     ),
-                    const SizedBox(width: 20),
+                    SizedBox(width: context.isMediumScreen ? 15 : 20),
                     Expanded(
                       child: _buildReviewsList(_reviews.length > halfLength
                           ? _reviews.sublist(halfLength)
@@ -166,15 +173,17 @@ class _ReviewsSectionState extends State<ReviewsSection> {
   }
 
   Widget _buildReviewCard(Review review, int index) {
+    final photoSize = context.isSmallScreen ? 60.0 : 80.0;
+
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: EdgeInsets.symmetric(vertical: context.isSmallScreen ? 8 : 10),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.white.withOpacity(0.2)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(context.isSmallScreen ? 12 : 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -184,98 +193,87 @@ class _ReviewsSectionState extends State<ReviewsSection> {
               children: [
                 FutureBuilder<Widget>(
                   future: review.buildPhoto(
-                    width: 80, // Уменьшаем размер фото
-                    height: 80,
+                    width: photoSize,
+                    height: photoSize,
                     fit: BoxFit.cover,
                     placeholder: Container(
-                      width: 80,
-                      height: 80,
+                      width: photoSize,
+                      height: photoSize,
                       color: Colors.grey[300],
                       child: const Center(
                         child: CircularProgressIndicator(),
                       ),
                     ),
                     errorWidget: Container(
-                      width: 80,
-                      height: 80,
+                      width: photoSize,
+                      height: photoSize,
                       decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.grey[800],
+                        borderRadius: BorderRadius.circular(photoSize / 2),
                       ),
-                      child: const Icon(
-                        Icons.person,
-                        size: 40,
-                        color: Colors.grey,
+                      child: Center(
+                        child: Icon(
+                          Icons.person,
+                          size: photoSize * 0.5,
+                          color: Colors.white54,
+                        ),
                       ),
                     ),
                   ),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                        width: 80,
-                        height: 80,
-                        color: Colors.grey[300],
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(photoSize / 2),
+                        child: snapshot.data!,
                       );
-                    }
-
-                    if (snapshot.hasError) {
-                      log('Ошибка загрузки фото: ${snapshot.error}');
+                    } else {
                       return Container(
-                        width: 80,
-                        height: 80,
+                        width: photoSize,
+                        height: photoSize,
                         decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.grey[800],
+                          borderRadius: BorderRadius.circular(photoSize / 2),
                         ),
-                        child: const Icon(
-                          Icons.error_outline,
-                          size: 40,
-                          color: Colors.grey,
+                        child: Center(
+                          child: snapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? SizedBox(
+                                  width: photoSize / 3,
+                                  height: photoSize / 3,
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Icon(
+                                  Icons.person,
+                                  size: photoSize * 0.5,
+                                  color: Colors.white54,
+                                ),
                         ),
                       );
                     }
-
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: snapshot.data ??
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              size: 40,
-                              color: Colors.grey,
-                            ),
-                          ),
-                    );
                   },
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: context.isSmallScreen ? 10 : 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         review.name,
-                        style: const TextStyle(
-                          fontSize: 20,
+                        style: TextStyle(
+                          fontSize: context.isSmallScreen ? 16 : 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
                       if (review.profession.isNotEmpty) ...[
-                        const SizedBox(height: 2),
+                        SizedBox(height: context.isSmallScreen ? 2 : 2),
                         Text(
                           review.profession,
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: TextStyle(
+                            fontSize: context.isSmallScreen ? 13 : 14,
                             color: Colors.white70,
                           ),
                         ),
@@ -286,12 +284,12 @@ class _ReviewsSectionState extends State<ReviewsSection> {
               ],
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: context.isSmallScreen ? 12 : 16),
 
             // Оценки - адаптивный дизайн с Wrap
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: context.isSmallScreen ? 6 : 8,
+              runSpacing: context.isSmallScreen ? 6 : 8,
               children: [
                 _buildInfoCard(
                   'Оценка',
@@ -318,9 +316,9 @@ class _ReviewsSectionState extends State<ReviewsSection> {
 
             // Отзыв
             if (review.feedback.isNotEmpty) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: context.isSmallScreen ? 12 : 16),
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(context.isSmallScreen ? 12 : 16),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12),
@@ -330,8 +328,8 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                 ),
                 child: Text(
                   review.feedback,
-                  style: const TextStyle(
-                    fontSize: 16, // Уменьшаем размер текста
+                  style: TextStyle(
+                    fontSize: context.isSmallScreen ? 14 : 16,
                     color: Colors.white70,
                     height: 1.5,
                   ),
@@ -341,24 +339,24 @@ class _ReviewsSectionState extends State<ReviewsSection> {
 
             // Улучшенные навыки
             if (review.improvedSkills.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: context.isSmallScreen ? 12 : 16),
+              Text(
                 'Улучшенные навыки:',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: context.isSmallScreen ? 14 : 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: context.isSmallScreen ? 6 : 8),
               Wrap(
-                spacing: 8,
-                runSpacing: 8,
+                spacing: context.isSmallScreen ? 6 : 8,
+                runSpacing: context.isSmallScreen ? 6 : 8,
                 children: review.improvedSkills.map((skill) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 8,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.isSmallScreen ? 10 : 14,
+                      vertical: context.isSmallScreen ? 6 : 8,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.1),
@@ -369,8 +367,8 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                     ),
                     child: Text(
                       skill,
-                      style: const TextStyle(
-                        fontSize: 12, // Уменьшаем размер текста
+                      style: TextStyle(
+                        fontSize: context.isSmallScreen ? 11 : 12,
                         color: Colors.white,
                       ),
                     ),
@@ -381,12 +379,15 @@ class _ReviewsSectionState extends State<ReviewsSection> {
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 1000.ms, delay: (index * 200).ms);
+    ).animate().fadeIn(
+          delay: Duration(milliseconds: 150 * index),
+          duration: Duration(milliseconds: 800),
+        );
   }
 
   Widget _buildInfoCard(String title, String value, IconData icon) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.all(context.isSmallScreen ? 8 : 10),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
@@ -395,19 +396,22 @@ class _ReviewsSectionState extends State<ReviewsSection> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: Colors.amber, size: 20),
-          const SizedBox(width: 6),
+          Icon(icon,
+              color: Colors.amber, size: context.isSmallScreen ? 16 : 20),
+          SizedBox(width: context.isSmallScreen ? 4 : 6),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
-                style: const TextStyle(fontSize: 10, color: Colors.white70),
+                style: TextStyle(
+                    fontSize: context.isSmallScreen ? 9 : 10,
+                    color: Colors.white70),
               ),
               Text(
                 value,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: context.isSmallScreen ? 12 : 14,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),

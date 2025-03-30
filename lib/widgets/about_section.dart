@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:sunday_sports/shared/extensions.dart';
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
@@ -13,7 +14,9 @@ class AboutSection extends StatelessWidget {
       constraints: BoxConstraints(
         minHeight: MediaQuery.of(context).size.height,
       ),
-      padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 20),
+      padding: EdgeInsets.symmetric(
+          vertical: context.isSmallScreen ? 50 : 80,
+          horizontal: context.isSmallScreen ? 15 : 20),
       decoration: BoxDecoration(
         color: colorScheme.surface,
       ),
@@ -22,14 +25,18 @@ class AboutSection extends StatelessWidget {
           Text(
             '3 часа — а эффект на годы',
             style: GoogleFonts.montserrat(
-              fontSize: 42,
+              fontSize: context.isSmallScreen
+                  ? 30
+                  : context.isMediumScreen
+                      ? 36
+                      : 42,
               fontWeight: FontWeight.bold,
               color: colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ).animate().fadeIn(duration: 800.ms),
 
-          const SizedBox(height: 60),
+          SizedBox(height: context.isSmallScreen ? 40 : 60),
 
           // Шаги тренинга
           Container(
@@ -37,11 +44,11 @@ class AboutSection extends StatelessWidget {
             child: _buildTimelineSteps(context),
           ),
 
-          const SizedBox(height: 60),
+          SizedBox(height: context.isSmallScreen ? 40 : 60),
 
           // Форматы
           Container(
-            padding: const EdgeInsets.all(30),
+            padding: EdgeInsets.all(context.isSmallScreen ? 20 : 30),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
@@ -51,14 +58,14 @@ class AboutSection extends StatelessWidget {
                 Icon(
                   Icons.rocket_launch,
                   color: Colors.orange,
-                  size: 40,
+                  size: context.isSmallScreen ? 30 : 40,
                 ),
-                const SizedBox(width: 20),
+                SizedBox(width: context.isSmallScreen ? 15 : 20),
                 Expanded(
                   child: Text(
                     'Гибкие форматы: можем провести у вас в офисе, в коворкинге или онлайн.',
                     style: GoogleFonts.montserrat(
-                      fontSize: 18,
+                      fontSize: context.isSmallScreen ? 16 : 18,
                       fontWeight: FontWeight.w500,
                       color: colorScheme.onSurface,
                       height: 1.5,
@@ -69,7 +76,7 @@ class AboutSection extends StatelessWidget {
             ),
           ).animate().fadeIn(duration: 800.ms, delay: 600.ms),
 
-          const SizedBox(height: 40),
+          SizedBox(height: context.isSmallScreen ? 30 : 40),
 
           // Кому это подходит (из блока 4)
           Column(
@@ -77,16 +84,20 @@ class AboutSection extends StatelessWidget {
               Text(
                 'Каждому, кто работает с людьми',
                 style: GoogleFonts.montserrat(
-                  fontSize: 32,
+                  fontSize: context.isSmallScreen
+                      ? 24
+                      : context.isMediumScreen
+                          ? 28
+                          : 32,
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
               ).animate().fadeIn(duration: 800.ms, delay: 800.ms),
-              const SizedBox(height: 40),
+              SizedBox(height: context.isSmallScreen ? 30 : 40),
               LayoutBuilder(
                 builder: (context, constraints) {
-                  final isWideScreen = constraints.maxWidth > 800;
+                  final isWideScreen = constraints.maxWidth > 600;
 
                   if (isWideScreen) {
                     return Row(
@@ -117,7 +128,7 @@ class AboutSection extends StatelessWidget {
               const SizedBox(height: 20),
               LayoutBuilder(
                 builder: (context, constraints) {
-                  final isWideScreen = constraints.maxWidth > 800;
+                  final isWideScreen = constraints.maxWidth > 600;
 
                   if (isWideScreen) {
                     return Row(
@@ -180,7 +191,7 @@ class AboutSection extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isWideScreen = constraints.maxWidth > 800;
+        final isWideScreen = context.isSmallScreen ? false : true;
 
         if (isWideScreen) {
           return Row(
@@ -233,8 +244,8 @@ class AboutSection extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.all(20),
-      margin: const EdgeInsets.all(5),
+      padding: EdgeInsets.all(context.isSmallScreen ? 15 : 20),
+      margin: EdgeInsets.all(context.isSmallScreen ? 3 : 5),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
@@ -248,25 +259,25 @@ class AboutSection extends StatelessWidget {
           Text(
             step.number,
             style: GoogleFonts.montserrat(
-              fontSize: 32,
+              fontSize: context.isSmallScreen ? 24 : 32,
               fontWeight: FontWeight.bold,
               color: colorScheme.primary,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: context.isSmallScreen ? 5 : 10),
           Text(
             step.title,
             style: GoogleFonts.montserrat(
-              fontSize: 20,
+              fontSize: context.isSmallScreen ? 18 : 20,
               fontWeight: FontWeight.bold,
               color: colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: context.isSmallScreen ? 5 : 10),
           Text(
             step.description,
             style: GoogleFonts.montserrat(
-              fontSize: 16,
+              fontSize: context.isSmallScreen ? 14 : 16,
               color: colorScheme.onSurface.withOpacity(0.8),
               height: 1.5,
             ),
@@ -292,7 +303,7 @@ class AboutSection extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(context.isSmallScreen ? 15 : 20),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
@@ -310,7 +321,7 @@ class AboutSection extends StatelessWidget {
                   TextSpan(
                     text: '$title — ',
                     style: GoogleFonts.montserrat(
-                      fontSize: 18,
+                      fontSize: context.isSmallScreen ? 16 : 18,
                       fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface,
                     ),
@@ -318,7 +329,7 @@ class AboutSection extends StatelessWidget {
                   TextSpan(
                     text: description,
                     style: GoogleFonts.montserrat(
-                      fontSize: 18,
+                      fontSize: context.isSmallScreen ? 16 : 18,
                       color: colorScheme.onSurface.withOpacity(0.8),
                     ),
                   ),

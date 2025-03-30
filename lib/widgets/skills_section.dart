@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:sunday_sports/shared/extensions.dart';
 
 class SkillsSection extends StatelessWidget {
   const SkillsSection({super.key});
@@ -11,19 +12,25 @@ class SkillsSection extends StatelessWidget {
       constraints: BoxConstraints(
         minHeight: MediaQuery.of(context).size.height,
       ),
-      padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
+      padding: EdgeInsets.symmetric(
+          vertical: context.isSmallScreen ? 40 : 60,
+          horizontal: context.isSmallScreen ? 15 : 20),
       child: Column(
         children: [
           Text(
             'Игровая механика → реальный рост',
             style: GoogleFonts.montserrat(
-              fontSize: 42,
+              fontSize: context.isSmallScreen
+                  ? 28
+                  : context.isMediumScreen
+                      ? 36
+                      : 42,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
             textAlign: TextAlign.center,
           ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.3),
-          const SizedBox(height: 80),
+          SizedBox(height: context.isSmallScreen ? 40 : 80),
           _buildSkillsGrid(context),
         ],
       ),
@@ -74,10 +81,10 @@ class SkillsSection extends StatelessWidget {
         // Определяем количество колонок в зависимости от ширины экрана
         final width = constraints.maxWidth;
 
-        if (width > 1200) {
+        if (width > 1000) {
           // Три колонки для очень широких экранов
           return _buildGridLayout(context, skillsData, 3);
-        } else if (width > 800) {
+        } else if (width > 600) {
           // Две колонки для широких экранов
           return _buildGridLayout(context, skillsData, 2);
         } else {
@@ -101,7 +108,7 @@ class SkillsSection extends StatelessWidget {
             : startIndex + columns;
 
         return Padding(
-          padding: const EdgeInsets.only(bottom: 20),
+          padding: EdgeInsets.only(bottom: context.isSmallScreen ? 15 : 20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: List.generate(
@@ -111,7 +118,9 @@ class SkillsSection extends StatelessWidget {
                 return Expanded(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: columns > 1 ? 10.0 : 0),
+                        horizontal: columns > 1
+                            ? (context.isSmallScreen ? 5.0 : 10.0)
+                            : 0),
                     child: _buildSkillCard(
                       context: context,
                       title: skillsData[dataIndex]['title'] as String,
@@ -137,10 +146,13 @@ class SkillsSection extends StatelessWidget {
     required IconData icon,
     required int delay,
   }) {
+    // Адаптивная высота в зависимости от размера экрана
+    final cardHeight = context.isSmallScreen ? 250.0 : 230.0;
+
     return Container(
       // Фиксированная высота для всех карточек
-      height: 230,
-      padding: const EdgeInsets.all(24),
+      height: cardHeight,
+      padding: EdgeInsets.all(context.isSmallScreen ? 16 : 24),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
@@ -154,11 +166,11 @@ class SkillsSection extends StatelessWidget {
         children: [
           // Иконка с заголовком
           Container(
-            margin: const EdgeInsets.only(bottom: 20),
+            margin: EdgeInsets.only(bottom: context.isSmallScreen ? 12 : 20),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(context.isSmallScreen ? 8 : 12),
                   decoration: BoxDecoration(
                     color: Colors.indigo.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -166,15 +178,15 @@ class SkillsSection extends StatelessWidget {
                   child: Icon(
                     icon,
                     color: Colors.indigo.shade200,
-                    size: 28,
+                    size: context.isSmallScreen ? 22 : 28,
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: context.isSmallScreen ? 10 : 16),
                 Expanded(
                   child: Text(
                     title,
                     style: GoogleFonts.montserrat(
-                      fontSize: 18,
+                      fontSize: context.isSmallScreen ? 16 : 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -191,25 +203,17 @@ class SkillsSection extends StatelessWidget {
             child: Text(
               description,
               style: GoogleFonts.montserrat(
-                fontSize: 16,
+                fontSize: context.isSmallScreen ? 14 : 16,
                 color: Colors.white.withOpacity(0.8),
                 height: 1.5,
               ),
               overflow: TextOverflow.ellipsis,
-              maxLines: 5,
+              maxLines: 6,
             ),
           ),
         ],
       ),
-    )
-        .animate()
-        .fadeIn(
-          delay: Duration(milliseconds: delay),
-          duration: Duration(milliseconds: 800),
-        )
-        .slideY(
-          begin: 0.2,
-          end: 0,
+    ).animate().fadeIn(
           delay: Duration(milliseconds: delay),
           duration: Duration(milliseconds: 800),
         );

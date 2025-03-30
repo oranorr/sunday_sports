@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:sunday_sports/shared/extensions.dart';
 
 class BusinessBenefitsSection extends StatelessWidget {
   const BusinessBenefitsSection({super.key});
@@ -26,7 +27,11 @@ class BusinessBenefitsSection extends StatelessWidget {
         minHeight: MediaQuery.of(context).size.height,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(80.0),
+        padding: EdgeInsets.all(context.isSmallScreen
+            ? 20.0
+            : context.isMediumScreen
+                ? 40.0
+                : 80.0),
         child: Column(
           children: [
             // Заголовок и верхняя часть с градиентным фоном
@@ -36,7 +41,11 @@ class BusinessBenefitsSection extends StatelessWidget {
                 Text(
                   'Типичный корпоративный тимбилдинг — деньги на ветер',
                   style: GoogleFonts.montserrat(
-                    fontSize: 42,
+                    fontSize: context.isSmallScreen
+                        ? 28
+                        : context.isMediumScreen
+                            ? 36
+                            : 42,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -49,14 +58,12 @@ class BusinessBenefitsSection extends StatelessWidget {
                         end: 0,
                         duration: Duration(milliseconds: 800)),
 
-                const SizedBox(height: 40),
+                SizedBox(height: context.isSmallScreen ? 20 : 40),
 
                 // Три блока "боли"
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    final isSmallScreen = constraints.maxWidth < 800;
-
-                    return isSmallScreen
+                    return context.isSmallScreen
                         ? Column(
                             children: [
                               _buildPainCard(
@@ -90,7 +97,7 @@ class BusinessBenefitsSection extends StatelessWidget {
                                   delay: 0,
                                 ),
                               ),
-                              const SizedBox(width: 20),
+                              SizedBox(width: context.isMediumScreen ? 15 : 20),
                               Expanded(
                                 child: _buildPainCard(
                                   context,
@@ -99,7 +106,7 @@ class BusinessBenefitsSection extends StatelessWidget {
                                   delay: 100,
                                 ),
                               ),
-                              const SizedBox(width: 20),
+                              SizedBox(width: context.isMediumScreen ? 15 : 20),
                               Expanded(
                                 child: _buildPainCard(
                                   context,
@@ -113,11 +120,11 @@ class BusinessBenefitsSection extends StatelessWidget {
                   },
                 ),
 
-                const SizedBox(height: 60),
+                SizedBox(height: context.isSmallScreen ? 30 : 60),
 
                 // Альтернативное решение
                 Container(
-                  padding: const EdgeInsets.all(30),
+                  padding: EdgeInsets.all(context.isSmallScreen ? 20 : 30),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(20),
@@ -134,14 +141,14 @@ class BusinessBenefitsSection extends StatelessWidget {
                       Icon(
                         Icons.lightbulb,
                         color: Colors.amber,
-                        size: 40,
+                        size: context.isSmallScreen ? 30 : 40,
                       ),
-                      const SizedBox(width: 20),
+                      SizedBox(width: context.isSmallScreen ? 15 : 20),
                       Expanded(
                         child: Text(
                           'Мафия — это реальный навык, а не просто веселье. Люди на практике учатся убеждать, видеть манипуляции и строить доверие в условиях неопределённости.',
                           style: GoogleFonts.montserrat(
-                            fontSize: 18,
+                            fontSize: context.isSmallScreen ? 16 : 18,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
                           ),
@@ -162,15 +169,16 @@ class BusinessBenefitsSection extends StatelessWidget {
 
             // Основная секция с преимуществами
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 24),
+              padding: EdgeInsets.symmetric(
+                  vertical: context.isSmallScreen ? 30 : 60,
+                  horizontal: context.isSmallScreen ? 10 : 24),
               // color: Colors.grey[900],
               child: Column(
                 children: [
                   // Первый ряд из двух карточек
                   LayoutBuilder(
                     builder: (context, constraints) {
-                      final isSmallScreen = constraints.maxWidth < 800;
-                      return isSmallScreen
+                      return context.isSmallScreen
                           ? Column(
                               children: [
                                 _buildFeatureCard(
@@ -204,7 +212,8 @@ class BusinessBenefitsSection extends StatelessWidget {
                                     delay: 0,
                                   ),
                                 ),
-                                const SizedBox(width: 24),
+                                SizedBox(
+                                    width: context.isMediumScreen ? 16 : 24),
                                 Expanded(
                                   child: _buildFeatureCard(
                                     context,
@@ -220,7 +229,7 @@ class BusinessBenefitsSection extends StatelessWidget {
                     },
                   ),
 
-                  const SizedBox(height: 30),
+                  SizedBox(height: context.isSmallScreen ? 20 : 30),
 
                   // Расширенный блок - выявление потенциала
                   _buildExpandableCard(
@@ -238,13 +247,12 @@ class BusinessBenefitsSection extends StatelessWidget {
                     delay: 200,
                   ),
 
-                  const SizedBox(height: 30),
+                  SizedBox(height: context.isSmallScreen ? 20 : 30),
 
                   // Второй ряд из двух карточек
                   LayoutBuilder(
                     builder: (context, constraints) {
-                      final isSmallScreen = constraints.maxWidth < 800;
-                      return isSmallScreen
+                      return context.isSmallScreen
                           ? Column(
                               children: [
                                 _buildFeatureCard(
@@ -278,7 +286,8 @@ class BusinessBenefitsSection extends StatelessWidget {
                                     delay: 300,
                                   ),
                                 ),
-                                const SizedBox(width: 24),
+                                SizedBox(
+                                    width: context.isMediumScreen ? 16 : 24),
                                 Expanded(
                                   child: _buildFeatureCard(
                                     context,
@@ -331,8 +340,8 @@ class BusinessBenefitsSection extends StatelessWidget {
     required int delay,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(24),
+      margin: EdgeInsets.only(bottom: context.isSmallScreen ? 15 : 20),
+      padding: EdgeInsets.all(context.isSmallScreen ? 16 : 24),
       decoration: BoxDecoration(
         color: Colors.grey[800],
         borderRadius: BorderRadius.circular(16),
@@ -350,19 +359,20 @@ class BusinessBenefitsSection extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(context.isSmallScreen ? 8 : 12),
                 decoration: BoxDecoration(
                   color: Colors.red.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: Colors.white, size: 28),
+                child: Icon(icon,
+                    color: Colors.white, size: context.isSmallScreen ? 22 : 28),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: context.isSmallScreen ? 12 : 16),
               Expanded(
                 child: Text(
                   title,
                   style: GoogleFonts.montserrat(
-                    fontSize: 20,
+                    fontSize: context.isSmallScreen ? 16 : 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -370,16 +380,16 @@ class BusinessBenefitsSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.isSmallScreen ? 12 : 16),
           Container(
             height: 1,
             color: Colors.grey[700],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.isSmallScreen ? 12 : 16),
           Text(
             description,
             style: GoogleFonts.montserrat(
-              fontSize: 16,
+              fontSize: context.isSmallScreen ? 14 : 16,
               color: Colors.white.withOpacity(0.9),
               height: 1.5,
             ),
@@ -416,7 +426,7 @@ class BusinessBenefitsSection extends StatelessWidget {
           },
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(context.isSmallScreen ? 16 : 24),
             decoration: BoxDecoration(
               color: Colors.black.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
@@ -431,14 +441,16 @@ class BusinessBenefitsSection extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: EdgeInsets.all(context.isSmallScreen ? 8 : 12),
                       decoration: BoxDecoration(
                         color: Colors.red.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(icon, color: Colors.white, size: 28),
+                      child: Icon(icon,
+                          color: Colors.white,
+                          size: context.isSmallScreen ? 22 : 28),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: context.isSmallScreen ? 12 : 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -446,7 +458,7 @@ class BusinessBenefitsSection extends StatelessWidget {
                           Text(
                             title,
                             style: GoogleFonts.montserrat(
-                              fontSize: 20,
+                              fontSize: context.isSmallScreen ? 16 : 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -454,7 +466,7 @@ class BusinessBenefitsSection extends StatelessWidget {
                           Text(
                             mainDescription,
                             style: GoogleFonts.montserrat(
-                              fontSize: 14,
+                              fontSize: context.isSmallScreen ? 12 : 14,
                               color: Colors.white.withOpacity(0.8),
                             ),
                           ),
@@ -466,30 +478,32 @@ class BusinessBenefitsSection extends StatelessWidget {
                           ? Icons.keyboard_arrow_up
                           : Icons.keyboard_arrow_down,
                       color: Colors.white,
-                      size: 28,
+                      size: context.isSmallScreen ? 22 : 28,
                     ),
                   ],
                 ),
                 if (isExpanded) ...[
-                  const SizedBox(height: 20),
+                  SizedBox(height: context.isSmallScreen ? 15 : 20),
                   Container(
                     height: 1,
                     color: Colors.grey[700],
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: context.isSmallScreen ? 15 : 20),
                   ...details.map((detail) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
+                        padding: EdgeInsets.only(
+                            bottom: context.isSmallScreen ? 8 : 12),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Icon(Icons.arrow_right,
-                                color: Colors.white, size: 24),
-                            const SizedBox(width: 8),
+                                color: Colors.white,
+                                size: context.isSmallScreen ? 20 : 24),
+                            SizedBox(width: context.isSmallScreen ? 4 : 8),
                             Expanded(
                               child: Text(
                                 detail,
                                 style: GoogleFonts.montserrat(
-                                  fontSize: 15,
+                                  fontSize: context.isSmallScreen ? 13 : 15,
                                   color: Colors.white.withOpacity(0.9),
                                 ),
                               ),
@@ -511,17 +525,14 @@ class BusinessBenefitsSection extends StatelessWidget {
         .slideY(begin: 0.1, end: 0, duration: Duration(milliseconds: 500));
   }
 
-  Widget _buildPainCard(
-    BuildContext context, {
-    required String description,
-    required int delay,
-  }) {
+  Widget _buildPainCard(BuildContext context,
+      {required String description, required int delay}) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.all(24),
+      margin: EdgeInsets.only(bottom: context.isSmallScreen ? 15 : 20),
+      padding: EdgeInsets.all(context.isSmallScreen ? 15 : 20),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: Colors.white.withOpacity(0.2),
         ),
@@ -532,14 +543,14 @@ class BusinessBenefitsSection extends StatelessWidget {
           Icon(
             Icons.cancel_outlined,
             color: Colors.redAccent,
-            size: 28,
+            size: context.isSmallScreen ? 22 : 28,
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: context.isSmallScreen ? 12 : 16),
           Expanded(
             child: Text(
               description,
               style: GoogleFonts.montserrat(
-                fontSize: 18,
+                fontSize: context.isSmallScreen ? 14 : 16,
                 color: Colors.white,
                 height: 1.5,
               ),
@@ -550,14 +561,8 @@ class BusinessBenefitsSection extends StatelessWidget {
     )
         .animate()
         .fadeIn(
-          delay: Duration(milliseconds: delay),
-          duration: Duration(milliseconds: 600),
-        )
-        .slideY(
-          begin: 0.2,
-          end: 0,
-          delay: Duration(milliseconds: delay),
-          duration: Duration(milliseconds: 800),
-        );
+            delay: Duration(milliseconds: delay),
+            duration: Duration(milliseconds: 600))
+        .slideY(begin: 0.1, end: 0, duration: Duration(milliseconds: 500));
   }
 }

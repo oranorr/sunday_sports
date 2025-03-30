@@ -74,6 +74,12 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "cupertino_icons",
+      "rootUri": "file:///Users/iaroslav/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.8",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
       "name": "equatable",
       "rootUri": "file:///Users/iaroslav/.pub-cache/hosted/pub.dev/equatable-2.0.7",
       "packageUri": "lib/",
@@ -494,7 +500,7 @@
       "languageVersion": "3.6"
     }
   ],
-  "generated": "2025-03-30T03:44:05.906495Z",
+  "generated": "2025-03-30T04:52:03.603686Z",
   "generator": "pub",
   "generatorVersion": "3.6.1",
   "flutterRoot": "file:///Users/iaroslav/dev/flutter",

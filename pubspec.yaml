@@ -20,6 +20,7 @@ dependencies:
   googleapis_auth: ^1.4.1
   path_provider: ^2.1.2
   excel: ^4.0.2
+  cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:

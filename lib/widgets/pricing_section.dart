@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:sunday_sports/shared/extensions.dart';
 
 class PricingSection extends StatelessWidget {
   const PricingSection({super.key});
@@ -8,23 +9,29 @@ class PricingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 20),
+      padding: EdgeInsets.symmetric(
+          vertical: context.isSmallScreen ? 50 : 80,
+          horizontal: context.isSmallScreen ? 15 : 20),
       color: Theme.of(context).colorScheme.surface,
       child: Column(
         children: [
           Text(
             'Цена, которая окупается в первые же недели',
             style: GoogleFonts.montserrat(
-              fontSize: 42,
+              fontSize: context.isSmallScreen
+                  ? 28
+                  : context.isMediumScreen
+                      ? 36
+                      : 42,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
             textAlign: TextAlign.center,
           ).animate().fadeIn(duration: 1000.ms),
-          const SizedBox(height: 60),
+          SizedBox(height: context.isSmallScreen ? 40 : 60),
           LayoutBuilder(
             builder: (context, constraints) {
-              final isWideScreen = constraints.maxWidth > 900;
+              final isWideScreen = constraints.maxWidth > 600;
 
               if (isWideScreen) {
                 return Row(
@@ -37,7 +44,7 @@ class PricingSection extends StatelessWidget {
                       description: '10-15 человек',
                       isPrimary: true,
                     ),
-                    const SizedBox(width: 30),
+                    SizedBox(width: context.isMediumScreen ? 20 : 30),
                     _buildPricingCard(
                       context,
                       title: 'Расширенный',
@@ -70,9 +77,9 @@ class PricingSection extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 40),
+          SizedBox(height: context.isSmallScreen ? 30 : 40),
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(context.isSmallScreen ? 15 : 20),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(15),
@@ -86,15 +93,17 @@ class PricingSection extends StatelessWidget {
                 Icon(
                   Icons.local_offer,
                   color: Colors.orange,
-                  size: 30,
+                  size: context.isSmallScreen ? 24 : 30,
                 ),
-                const SizedBox(width: 15),
-                Text(
-                  'Первая игра для компании – скидка 10%!',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
+                SizedBox(width: context.isSmallScreen ? 10 : 15),
+                Flexible(
+                  child: Text(
+                    'Первая игра для компании – скидка 10%!',
+                    style: GoogleFonts.montserrat(
+                      fontSize: context.isSmallScreen ? 16 : 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
@@ -113,10 +122,12 @@ class PricingSection extends StatelessWidget {
     required bool isPrimary,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
+    final cardWidth =
+        context.isSmallScreen ? MediaQuery.of(context).size.width - 40 : 350.0;
 
     return Container(
-      width: 350,
-      padding: const EdgeInsets.all(30),
+      width: cardWidth,
+      padding: EdgeInsets.all(context.isSmallScreen ? 20 : 30),
       decoration: BoxDecoration(
         color: isPrimary
             ? colorScheme.primary.withOpacity(0.2)
@@ -142,13 +153,13 @@ class PricingSection extends StatelessWidget {
           Text(
             title,
             style: GoogleFonts.montserrat(
-              fontSize: 24,
+              fontSize: context.isSmallScreen ? 20 : 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: context.isSmallScreen ? 15 : 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -157,22 +168,24 @@ class PricingSection extends StatelessWidget {
               Icon(
                 Icons.currency_ruble,
                 color: isPrimary ? colorScheme.secondary : Colors.white70,
-                size: 30,
+                size: context.isSmallScreen ? 24 : 30,
               ),
-              const SizedBox(width: 5),
+              SizedBox(width: context.isSmallScreen ? 3 : 5),
               Text(
                 price,
                 style: GoogleFonts.montserrat(
-                  fontSize: 36,
+                  fontSize: context.isSmallScreen ? 28 : 36,
                   fontWeight: FontWeight.bold,
                   color: isPrimary ? colorScheme.secondary : Colors.white,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: context.isSmallScreen ? 10 : 15),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            padding: EdgeInsets.symmetric(
+                vertical: context.isSmallScreen ? 8 : 10,
+                horizontal: context.isSmallScreen ? 15 : 20),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(30),
@@ -180,22 +193,22 @@ class PricingSection extends StatelessWidget {
             child: Text(
               description,
               style: GoogleFonts.montserrat(
-                fontSize: 16,
+                fontSize: context.isSmallScreen ? 14 : 16,
                 color: Colors.white.withOpacity(0.8),
               ),
             ),
           ),
-          const SizedBox(height: 30),
+          SizedBox(height: context.isSmallScreen ? 20 : 30),
           if (isPrimary) ...[
-            _buildFeatureItem('Вводная часть'),
-            _buildFeatureItem('3-4 игры с разбором'),
-            _buildFeatureItem('Ведущий-профессионал'),
+            _buildFeatureItem(context, 'Вводная часть'),
+            _buildFeatureItem(context, '3-4 игры с разбором'),
+            _buildFeatureItem(context, 'Ведущий-профессионал'),
           ] else ...[
-            _buildFeatureItem('Все преимущества базового'),
-            _buildFeatureItem('Больше участников'),
-            _buildFeatureItem('Индивидуальные условия'),
+            _buildFeatureItem(context, 'Все преимущества базового'),
+            _buildFeatureItem(context, 'Больше участников'),
+            _buildFeatureItem(context, 'Индивидуальные условия'),
           ],
-          const SizedBox(height: 30),
+          SizedBox(height: context.isSmallScreen ? 20 : 30),
           ElevatedButton(
             onPressed: () {
               // TODO: Добавить прокрутку к форме контактов
@@ -204,9 +217,9 @@ class PricingSection extends StatelessWidget {
               backgroundColor: isPrimary
                   ? colorScheme.secondary
                   : Colors.white.withOpacity(0.2),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-                vertical: 20,
+              padding: EdgeInsets.symmetric(
+                horizontal: context.isSmallScreen ? 30 : 40,
+                vertical: context.isSmallScreen ? 15 : 20,
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -215,7 +228,7 @@ class PricingSection extends StatelessWidget {
             child: Text(
               'Оставить заявку',
               style: GoogleFonts.montserrat(
-                fontSize: 16,
+                fontSize: context.isSmallScreen ? 14 : 16,
                 fontWeight: FontWeight.bold,
                 color: isPrimary ? Colors.black : Colors.white,
               ),
@@ -229,22 +242,22 @@ class PricingSection extends StatelessWidget {
         .slideY(begin: 0.2);
   }
 
-  Widget _buildFeatureItem(String text) {
+  Widget _buildFeatureItem(BuildContext context, String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: context.isSmallScreen ? 6 : 8),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.check_circle_outline,
             color: Colors.green,
-            size: 20,
+            size: context.isSmallScreen ? 16 : 20,
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: context.isSmallScreen ? 8 : 10),
           Expanded(
             child: Text(
               text,
               style: GoogleFonts.montserrat(
-                fontSize: 16,
+                fontSize: context.isSmallScreen ? 14 : 16,
                 color: Colors.white,
               ),
             ),
