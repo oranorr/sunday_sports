@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:sunday_sports/shared/cta_button.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -25,7 +26,7 @@ class HeroSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Самый эффективный тренажер социальных навыков для вашей команды',
+                    'Спортивная Мафия как тренажер социальных навыков для бизнеса.',
                     style: GoogleFonts.raleway(
                       fontSize: 75,
                       fontWeight: FontWeight.w500,
@@ -42,7 +43,7 @@ class HeroSection extends StatelessWidget {
                   ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3),
                   const SizedBox(height: 55),
                   Text(
-                    'Спортивная мафия.',
+                    'Развиваем критическое мышление, уверенность в переговорах и командное взаимодействие через игровую механику спортивной мафии.',
                     style: GoogleFonts.raleway(
                       fontSize: 55,
                       fontWeight: FontWeight.w400,
@@ -60,7 +61,9 @@ class HeroSection extends StatelessWidget {
                       .animate()
                       .fadeIn(duration: 800.ms, delay: 300.ms)
                       .slideY(begin: 0.3),
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 30),
+                  CTAButton(text: 'Записаться'),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
